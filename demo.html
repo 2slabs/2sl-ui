@@ -8,10 +8,12 @@
     <style>
       body { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
       .panel { padding: calc(var(--unit) * 4); display: flex; flex-direction: column; gap: calc(var(--unit) * 3); }
-      .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--unit); }
-      .swatches div { height: 36px; border: 1px solid var(--ink); display: flex; align-items: end; padding: 2px var(--unit); color: var(--pad-text); }
+      .swatches { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: var(--unit); }
+      .swatches div { height: 36px; border: 1px solid var(--ink); display: flex; align-items: end; padding: 2px var(--unit); color: var(--pad-text); overflow: hidden; white-space: nowrap; }
       .swatches div.light-text { color: var(--ink); }
+      .swatches div.lit { color: var(--lit-pad-text); }
       .ui-pads { height: 120px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .states { display: flex; flex-wrap: wrap; gap: calc(var(--unit) * 3); align-items: center; }
     </style>
   </head>
   <body>
@@ -27,14 +29,28 @@
         <div style="background: var(--ink); color: var(--inverse)">ink</div>
         <div style="background: var(--unlit)">unlit</div>
         <div style="background: var(--label)">label</div>
-        <div style="background: var(--now)">now</div>
-        <div style="background: var(--mint); color: #000">mint</div>
+        <div style="background: var(--now); color: var(--now-text)">now</div>
+        <div style="background: var(--mint); color: var(--selection-text)">mint</div>
+        <div style="background: var(--hue-ink)">hue-ink</div>
+        <div style="background: var(--hue-grey)">hue-grey</div>
+      </div>
+      <div class="swatches">
         <div style="background: var(--hue-red)">red</div>
         <div style="background: var(--hue-orange)">orange</div>
+        <div style="background: var(--hue-yellow)">yellow</div>
         <div style="background: var(--hue-green)">green</div>
+        <div style="background: var(--hue-cyan)">cyan</div>
         <div style="background: var(--hue-blue)">blue</div>
-        <div style="background: var(--hue-ink)">ink</div>
-        <div style="background: var(--hue-grey)">grey</div>
+        <div style="background: var(--hue-purple)">purple</div>
+        <div style="background: var(--hue-pink)">pink</div>
+        <div class="lit" style="background: var(--hue-red-lit)">red lit</div>
+        <div class="lit" style="background: var(--hue-orange-lit)">orange lit</div>
+        <div class="lit" style="background: var(--hue-yellow-lit)">yellow lit</div>
+        <div class="lit" style="background: var(--hue-green-lit)">green lit</div>
+        <div class="lit" style="background: var(--hue-cyan-lit)">cyan lit</div>
+        <div style="background: var(--hue-blue-lit)">blue lit</div>
+        <div style="background: var(--hue-purple-lit)">purple lit</div>
+        <div class="lit" style="background: var(--hue-pink-lit)">pink lit</div>
       </div>
       <div class="ui-hint">secondary text uses --label. one line, lowercase.</div>
       <div class="ui-params">
@@ -47,12 +63,25 @@
         <span class="label">off</span><span><button class="toggle-off" disabled></button></span>
       </div>
       <div class="ui-rule"></div>
+      <div class="states">
+        <span class="ui-label">marked</span><span class="radios-marked"></span>
+        <span class="ui-label">disabled</span><span class="radios-disabled"></span>
+        <select class="select-disabled" disabled></select>
+        <input class="ui-input" value="120" disabled />
+        <button class="ui-key" disabled><kbd>x</kbd>clear</button>
+        <button class="ui-key primary" disabled><kbd>ret</kbd>insert</button>
+      </div>
+      <table class="ui-table" style="width: auto; align-self: start">
+        <tr><th style="width: 2ch"></th><th>scene</th><th class="num">bars</th></tr>
+        <tr><td>▸</td><td>intro</td><td class="num">8</td></tr>
+        <tr class="dim"><td></td><td>verse</td><td class="num">16</td></tr>
+      </table>
       <div class="ui-steps steps"></div>
       <div class="ui-pads" style="--hue: var(--hue-green)">
         <div class="ui-pad"><span class="dim">1 Dm9</span><span class="big">i9</span><button class="corner">↻</button></div>
         <div class="ui-pad playing"><span class="dim">2 G9</span><span class="big">IV9</span><button class="corner">↻</button></div>
         <div class="ui-pad" style="--hue: var(--hue-blue)"><span class="dim">3 Am11</span><span class="big">v11</span></div>
-        <div class="ui-pad" style="--hue: var(--hue-grey)"><span class="dim">4 C</span><span class="big">♭VII</span></div>
+        <div class="ui-pad lit" style="--hue-lit: var(--hue-yellow-lit)"><span class="dim">4 C</span><span class="big">♭VII</span></div>
       </div>
       <footer class="ui-footer">
         <button class="ui-key"><kbd>g</kbd>generate</button>
@@ -76,6 +105,11 @@
         fillSelect(q(".select-scale"), [{ value: "minor", label: "minor" }, { value: "dorian", label: "dorian" }, { value: "phrygian", label: "phrygian" }]);
         toggle(q(".toggle-bass"), () => bass, (v) => (bass = v));
         toggle(q(".toggle-off"), () => false, () => {});
+        radioGroup(q(".radios-marked"), [["a", "a"], ["b", "b"], ["c", "c"]], () => "a", () => {});
+        q('.radios-marked button[data-value="c"]').classList.add("ui-marked");
+        radioGroup(q(".radios-disabled"), [["on", "on"], ["off", "off"]], () => "on", () => {});
+        q(".radios-disabled").querySelectorAll("button").forEach((b) => (b.disabled = true));
+        fillSelect(q(".select-disabled"), [{ value: "minor", label: "minor" }]);
         slider(q(".slider-swing"), q(".presets-swing"), { min: 50, max: 75, marks: [54, 58, 62, 66, 71], valueEl: q(".swing-value"), format: (v) => (v === 50 ? "straight" : `${v}%`) }, () => swing, (v) => (swing = v));
         const steps = q(".steps");
         for (let b = 1; b <= 4; b++) steps.insertAdjacentHTML("beforeend", `<span class="beat" style="grid-column: ${(b - 1) * 4 + 1} / span 4">${b}</span>`);
