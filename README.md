@@ -9,7 +9,7 @@ First used in [chord-progressions](../chord-progressions). Open `demo.html` (e.g
 | file | what |
 |---|---|
 | `tokens.css` | colours, type, spacing, light + dark themes, base element styles |
-| `components.css` | header, params grid, radio chips, select, toggle, slider + presets, step grid, pads, key-hint footer |
+| `components.css` | header, params grid, radio chips, select, toggle, slider + presets, input, readout, table, notice, step grid, pads, key-hint footer |
 | `ui.ts` | DOM helpers: `radioGroup`, `toggle`, `fillSelect`, `slider`, `applyTheme`, `closeDialog` |
 | `fonts/` | Cozette (MIT), the 2sl.to font |
 | `max/2sl-colors.json` | the same colours as Max RGBA floats, for Max for Live |
@@ -55,6 +55,10 @@ These rules include Ableton's *Designing Extensions* guide (in the SDK docs), wh
 | a rhythm / sequence | `.ui-steps` | 16 per bar, beat numbers above, `.now` playhead while previewing |
 | the main musical result | `.ui-pads` / `.ui-pad` | the focal point: biggest, coloured, near the bottom above the actions |
 | actions | `.ui-key` footer | verbs; `Cancel` always called cancel; one `.primary` (the confirming action) on the right |
+| a typed value | `.ui-input` | numbers: show the unit beside it |
+| the one number that matters | `.ui-readout` | 39px, at most one per screen |
+| a list of rows | `.ui-table` | `.num` columns right-aligned, `.dim` rows for unchanged items |
+| a warning or tip | `.ui-notice` (`.warn`) | one line; warn in orange only when something will go wrong |
 | unavailable control | `:disabled` | grey it out, don't hide it |
 
 Layout: header (title + status) → main choice → parameters in a `.ui-params` grid, grouped and separated by `.ui-rule` → visualisation → pads → footer. Top to bottom follows the data flow.

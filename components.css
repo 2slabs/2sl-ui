@@ -112,3 +112,27 @@
 .ui-key.primary:hover { background: var(--now); border-color: var(--now); color: #FFFFFF; }
 .ui-key.primary:hover kbd { background: #FFFFFF; color: #000000; }
 .ui-key:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* --- text / number input: <input class="ui-input"> --- */
+.ui-input {
+  appearance: none; -webkit-appearance: none; background: transparent; border: 1px solid var(--ink); border-radius: 0;
+  height: var(--line); padding: 0 calc(var(--unit) * 1.5); width: 10ch; color: var(--ink); font: inherit;
+}
+.ui-input:hover { border-color: var(--now); }
+.ui-input:focus { outline: 1px solid var(--now); outline-offset: 1px; }
+.ui-input::-webkit-inner-spin-button, .ui-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.ui-input:disabled { opacity: 0.4; }
+
+/* --- big readout: the one number that matters (39px is Cozette's third pixel size) --- */
+.ui-readout { font-size: var(--huge); line-height: calc(var(--line) * 3); }
+
+/* --- table: plain rows, ink rule under the header --- */
+.ui-table { border-collapse: collapse; width: 100%; }
+.ui-table th { color: var(--label); font-weight: normal; text-align: left; border-bottom: 1px solid var(--ink); padding: 0 calc(var(--unit) * 2) 0 0; }
+.ui-table td { padding: 0 calc(var(--unit) * 2) 0 0; white-space: nowrap; }
+.ui-table td.num, .ui-table th.num { text-align: right; }
+.ui-table tr.dim td { color: var(--label); }
+
+/* --- notice: a one-line warning or tip --- */
+.ui-notice { border: 1px solid var(--ink); padding: 0 calc(var(--unit) * 2); }
+.ui-notice.warn { border-color: var(--hue-orange); background: var(--hue-orange); color: var(--pad-text); }
