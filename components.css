@@ -18,7 +18,7 @@
 .ui-rule { border-top: 1px solid var(--ink); }
 
 /* --- radio group (chips): ≤ 5 options, equal widths, the current one inverted --- */
-.ui-chips { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--unit); }
+.ui-chips { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--unit); justify-self: start; }
 .ui-chips button {
   background: transparent; border: 1px solid var(--ink); padding: 0 calc(var(--unit) * 1.5);
   line-height: calc(var(--line) - 2px); cursor: pointer; white-space: nowrap;
