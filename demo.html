@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <title>2sl-ui</title>
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./components.css" />
+    <style>
+      body { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+      .panel { padding: calc(var(--unit) * 4); display: flex; flex-direction: column; gap: calc(var(--unit) * 3); }
+      .swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--unit); }
+      .swatches div { height: 36px; border: 1px solid var(--ink); display: flex; align-items: end; padding: 2px var(--unit); color: var(--pad-text); }
+      .swatches div.light-text { color: var(--ink); }
+      .ui-pads { height: 120px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    </style>
+  </head>
+  <body>
+    <template id="panel">
+      <header class="ui-header">
+        <span class="ui-wordmark">2sl-ui</span>
+        <span class="ui-status"><b>theme</b><span class="theme-name"></span></span>
+        <span class="spacer"></span>
+        <span class="ui-status">122 bpm</span>
+      </header>
+      <div class="swatches">
+        <div style="background: var(--pad)" class="light-text">pad</div>
+        <div style="background: var(--ink); color: var(--inverse)">ink</div>
+        <div style="background: var(--unlit)">unlit</div>
+        <div style="background: var(--label)">label</div>
+        <div style="background: var(--now)">now</div>
+        <div style="background: var(--mint); color: #000">mint</div>
+        <div style="background: var(--hue-red)">red</div>
+        <div style="background: var(--hue-orange)">orange</div>
+        <div style="background: var(--hue-green)">green</div>
+        <div style="background: var(--hue-blue)">blue</div>
+        <div style="background: var(--hue-ink)">ink</div>
+        <div style="background: var(--hue-grey)">grey</div>
+      </div>
+      <div class="ui-hint">secondary text uses --label. one line, lowercase.</div>
+      <div class="ui-params">
+        <span class="label">style</span><span class="radios-style"></span>
+        <span class="label">mode</span><span class="radios-mode"></span>
+        <span class="label">scale</span><select class="select-scale"></select>
+        <span class="label">bass</span><span><button class="toggle-bass"></button></span>
+        <span class="label">swing</span>
+        <span style="display: inline-flex; gap: 8px; align-items: center"><span class="slider-swing"><input /></span><span class="swing-value"></span><span class="presets-swing"></span></span>
+        <span class="label">off</span><span><button class="toggle-off" disabled></button></span>
+      </div>
+      <div class="ui-rule"></div>
+      <div class="ui-steps steps"></div>
+      <div class="ui-pads" style="--hue: var(--hue-green)">
+        <div class="ui-pad"><span class="dim">1 Dm9</span><span class="big">i9</span><button class="corner">↻</button></div>
+        <div class="ui-pad playing"><span class="dim">2 G9</span><span class="big">IV9</span><button class="corner">↻</button></div>
+        <div class="ui-pad" style="--hue: var(--hue-blue)"><span class="dim">3 Am11</span><span class="big">v11</span></div>
+        <div class="ui-pad" style="--hue: var(--hue-grey)"><span class="dim">4 C</span><span class="big">♭VII</span></div>
+      </div>
+      <footer class="ui-footer">
+        <button class="ui-key"><kbd>g</kbd>generate</button>
+        <button class="ui-key"><kbd>space</kbd>preview</button>
+        <span class="spacer"></span>
+        <button class="ui-key"><kbd>esc</kbd>cancel</button>
+        <button class="ui-key primary"><kbd>ret</kbd>insert</button>
+      </footer>
+    </template>
+    <section class="panel" data-theme="light"></section>
+    <section class="panel" data-theme="dark"></section>
+    <script type="module">
+      import { radioGroup, toggle, fillSelect, slider } from "./ui.ts";
+      for (const panel of document.querySelectorAll(".panel")) {
+        panel.append(document.querySelector("#panel").content.cloneNode(true));
+        const q = (s) => panel.querySelector(s);
+        q(".theme-name").textContent = panel.dataset.theme;
+        let style = "dub", mode = "a", bass = true, swing = 58;
+        radioGroup(q(".radios-style"), [["dub", "dub", "var(--hue-blue)"], ["deep", "deep", "var(--hue-green)"], ["house", "house", "var(--hue-orange)"]], () => style, (v) => (style = v));
+        radioGroup(q(".radios-mode"), [["a", "diatonic"], ["b", "parallel"]], () => mode, (v) => (mode = v));
+        fillSelect(q(".select-scale"), [{ value: "minor", label: "minor" }, { value: "dorian", label: "dorian" }, { value: "phrygian", label: "phrygian" }]);
+        toggle(q(".toggle-bass"), () => bass, (v) => (bass = v));
+        toggle(q(".toggle-off"), () => false, () => {});
+        slider(q(".slider-swing"), q(".presets-swing"), { min: 50, max: 75, marks: [54, 58, 62, 66, 71], valueEl: q(".swing-value"), format: (v) => (v === 50 ? "straight" : `${v}%`) }, () => swing, (v) => (swing = v));
+        const steps = q(".steps");
+        for (let b = 1; b <= 4; b++) steps.insertAdjacentHTML("beforeend", `<span class="beat" style="grid-column: ${(b - 1) * 4 + 1} / span 4">${b}</span>`);
+        [..."X..x..x...x-.x.."].forEach((c, i) => {
+          const s = document.createElement("button");
+          s.className = c === "X" ? "X" : c === "x" ? "x" : c === "-" ? "hold" : "";
+          if (i === 6) s.classList.add("now");
+          steps.append(s);
+        });
+      }
+    </script>
+  </body>
+</html>
